@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
+
     <!--导入属性配置-->
     <properties resource="mysqldb.properties"></properties>
 
@@ -11,15 +12,21 @@
     <classPathEntry location="${jdbc.driverLocation}"/>
 
     <context id="default" targetRuntime="MyBatis3">
-
-        <!-- optional，旨在创建class时，对注释进行控制 -->
-        <commentGenerator>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!-- 使用自定义的插件 -->
+        <commentGenerator type="com.mybatis.config.RemarksCommentGenerator">
             <property name="suppressDate" value="true"/>
             <property name="javaFileEncoding" value="UTF-8"/>
             <property name="suppressAllComments" value="true"/>
-            <!--<property name="addRemarkComments" value="true"/>-->
         </commentGenerator>
-
+        <!-- optional，旨在创建class时，对注释进行控制 -->
+    <!--    <commentGenerator  type="com.mybatis.config.RemarksCommentGenerator">
+            <property name="suppressDate" value="true"/>
+            <property name="javaFileEncoding" value="UTF-8"/>
+            <property name="suppressAllComments" value="true"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+-->
         <!--jdbc的数据库连接 -->
         <jdbcConnection
                 driverClass="${jdbc.driverClass}"
@@ -41,7 +48,7 @@
             targetPackage     指定生成的model生成所在的包名
             targetProject     指定在该项目下所在的路径
         -->
-        <javaModelGenerator targetPackage="com.xdaocloud.futurechain.model"
+        <javaModelGenerator targetPackage="com.mybatis.model"
                             targetProject="src/main/java">
 
             <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
@@ -65,7 +72,7 @@
                 type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
                 type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
         -->
-        <javaClientGenerator targetPackage="com.xdaocloud.futurechain.mapper"
+        <javaClientGenerator targetPackage="com.mybatis.mapper"
                              targetProject="src/main/java" type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
@@ -78,10 +85,6 @@
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <domainObjectRenamingRule searchString="^T" replaceString="" />
         </table>-->
-
-
-
-
 
 
         <table tableName="t_user" domainObjectName="User"

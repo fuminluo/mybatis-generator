@@ -4,8 +4,9 @@
 
 在pom.xml增加以下插件：
 
+
+```
 <build>
-  <finalName>zsxt</finalName>
   <plugins>
     <plugin>
       <groupId>org.mybatis.generator</groupId>
@@ -18,6 +19,7 @@
     </plugin>
   </plugins>
 </build>
+```
 
 配置好Maven插件，下面需要配置插件需要配置文件
 
@@ -27,7 +29,10 @@ Maven的项目配置文件存放路径如下图：
 
 generatorConfig.xml代码如下：
 
+```
+
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE generatorConfiguration
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
@@ -130,8 +135,10 @@ generatorConfig.xml代码如下：
     </context>
 </generatorConfiguration>
 
-mysqldb.propertites代码如下：
 
+```
+适配 Oracle 、MySQL、PGsql 数据库l
+mysqldb.propertites代码如下：
 ```
 #启动包路径
 jdbc.driverLocation=src/main/resources/lib/mysql-connector-java-5.1.46.jar
@@ -144,13 +151,14 @@ jdbc.username=root
 jdbc.password=123456
 ```
 
- 
 
 三、在Intellij IDEA添加一个“Run运行”选项，使用maven运行mybatis-generator-maven-plugin插件
 
 点击 菜单run中Edit Configurations,会出现
 
 点击+号，选择maven，会出现
+
+![Image text](/images/20181208151230.png)
 
 在name和Commond line分别填上如上图所示，apply和ok
 
@@ -160,5 +168,65 @@ jdbc.password=123456
 
 逆向工程生成结果如下：
 
+加入获取数据库字段注释
+
+
+分支 plus-remarks 
+先把项目打包，执行命令： mvn install 
+在项目 target 文件夹下面得到jar包：mybatis-generator-1.0.jar
+推到本地maven查看，命令：
+```
+mvn install:install-file -DgroupId={包名} -DartifactId={项目名} -?Dversion=1.0 -Dfile={绝对路径} -Dpackaging=jar
+
+
+mvn install:install-file -DgroupId=mybatis.generator -DartifactId=mybatis-generator -Dversion=1.0 -Dfile=D:\Work\Project\mybatis-generator\target\mybatis-generator-1.0.jar -Dpackaging=jar
+```
+
+pom.xml 修改如下
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>mybatis.generator</groupId>
+    <artifactId>mybatis-generator</artifactId>
+    <version>1.0</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-maven-plugin</artifactId>
+            <version>1.3.6</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.6</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>mybatis.generator</groupId>
+                        <artifactId>mybatis-generator</artifactId>
+                        <version>1.0</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <verbose>true</verbose>
+                    <overwrite>true</overwrite>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
+```
+
 完！
 --------------------- 
+
